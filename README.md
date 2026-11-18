@@ -35,4 +35,57 @@ Best Practices for Rapid Prototyping
 ￼ Consistent Naming: Tie everything back to your feature ID.
 ￼ Code: ⁠prj123_mcp_server_logic⁠ (Notebook)
 ￼ MLflow: ⁠prj123_mcp_server_model⁠ (Registered Model)
-￼ API Endpoint: ⁠prj123_mcp_endpoint⁠ (Serving Endpoint)
+￼ API Endpoint: ⁠prj123_mcp_endpoint
+⁠ (Serving Endpoint)
+
+
+Databricks Simple Naming Conventions
+This guide outlines a minimal, easy-to-follow naming convention for your Databricks environment.
+The Golden Rule: All assets related to a specific piece of work should be tied together using a Feature ID (e.g., a Jira ticket number like ⁠PROJ-123⁠ converted to ⁠proj123⁠).
+Use ⁠snake_case⁠ (lowercase with underscores) for all Databricks assets, and ⁠kebab-case⁠ (lowercase with hyphens) for Git branches.
+1. The Core Identifier (Feature ID)
+Decide on a short identifier for your feature or task.
+￼ Example: ⁠prj123⁠
+2. Git Repos & Branches
+Branch names should start with the type of work (⁠feat⁠, ⁠bug⁠, ⁠hotfix⁠), followed by the Feature ID and a brief description.
+￼ Format: ⁠[type]/[feature-id]-[short-description]⁠
+￼ Example: ⁠feat/prj123-customer-churn-model⁠
+￼ Example: ⁠bug/prj123-fix-prompt-logging⁠
+3. Workspace Assets (Notebooks & Folders)
+Notebooks should clearly indicate the Feature ID and the action they perform. Keep them in a project-specific folder.
+￼ Folder Format: ⁠/Workspace/Repos/[Project_Name]/[feature_id]⁠
+￼ Notebook Format: ⁠[feature_id]_[action]_[target]⁠
+￼ Example: ⁠prj123_train_churn_model⁠
+￼ Example: ⁠prj123_evaluate_llm_prompts⁠
+4. Data Assets (Databases & Tables)
+For Unity Catalog or Hive Metastore, group tables under a standard database/schema, but prefix the tables with the Feature ID to isolate development work.
+￼ Database / Schema: ⁠[project_name]_[environment]⁠ (e.g., ⁠customer_ml_dev⁠)
+￼ Tables / Delta Tables: ⁠[feature_id]_[data_description]⁠
+￼ Example: ⁠prj123_training_features⁠
+￼ Example: ⁠prj123_model_predictions⁠
+5. MLflow & LLMOps Assets
+Tie your MLflow experiments and LLM logs directly to the Feature ID so you can trace a model back to the exact Git branch that created it.
+￼ MLflow Experiment: ⁠[feature_id]_[model_name]_exp⁠
+￼ Example: ⁠prj123_churn_xgboost_exp⁠
+￼ Registered Model Name: ⁠[project_name]_[model_name]⁠ (Keep Feature ID out of the final production registry name, use tags instead).
+￼ Example: ⁠customer_churn_model⁠ (Tag with ⁠branch: feat/prj123⁠)
+￼ LLMOps Log Tables (Inference Tables / Payload Logging): ⁠[feature_id]_llm_logs⁠
+￼ Example: ⁠prj123_llm_inference_logs⁠
+￼ Example: ⁠prj123_prompt_eval_results⁠
+6. Model Inference & Serverless Compute
+When using notebook servers as inference endpoints or utilizing serverless compute for app backends, clearly label the service and its compute layer with the Feature ID to track active processes and costs.
+￼ Inference Endpoint (Model Serving / Notebook): ⁠[feature_id]_[model_name]_endpoint⁠
+￼ Example: ⁠prj123_churn_endpoint⁠
+￼ Example: ⁠prj123_llm_routing_endpoint⁠
+￼ Serverless Compute (SQL Warehouses / App Compute): ⁠[feature_id]_[process_or_app_name]_compute⁠
+￼ Example: ⁠prj123_customer_app_compute⁠
+￼ Example: ⁠prj123_data_sync_serverless⁠
+Summary Checklist
+If working on Ticket #123 for "Churn":
+￼ [ ] Branch: ⁠feat/prj123-churn⁠
+￼ [ ] Notebook: ⁠prj123_prep_data⁠
+￼ [ ] Data Table: ⁠prj123_churn_features⁠
+￼ [ ] MLflow Exp: ⁠prj123_churn_exp⁠
+￼ [ ] LLM Log: ⁠prj123_llm_logs⁠
+￼ [ ] Endpoint: ⁠prj123_churn_endpoint⁠
+￼ [ ] Compute: ⁠prj123_churn_app_compute⁠
