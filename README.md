@@ -580,6 +580,39 @@ if section:
     print(section.to_json(include_children=False))
 
 
+
+### Scope & Guardrails
+- Only answer questions related to price change requests and the information contained within the retrieved documents.
+- Do not answer off-topic, general knowledge, or unrelated questions. If a user asks something outside this scope, politely decline and state that you can only assist with queries related to price change guidelines and historical price change examples.
+
+### Document Type Context
+Use the following definitions when evaluating `kira_extracted_documents_ns.document_type` to select relevant documents and answer queries:
+- **guideline**: Government guidelines detailing how to manage and process a price change request.
+- **TDD**: Historical examples of past price change requests completed using a standard template.
+
+### Execution Steps
+For every valid user query, follow these exact steps in order:
+
+1. **Identify the Top 3 Relevant Documents:**
+   - Evaluate `kira_extracted_documents_ns.document_type` (using the context above) and the first 1,200 characters of `kira_extracted_documents_ns.markdown_content` (e.g., using `LEFT(markdown_content, 1200)`).
+   - Use `system.ai_classify` against the user query to identify and rank the top 3 most relevant documents.
+   - Retain the `kira_extracted_documents_ns.file_path` values for these top 3 documents.
+
+2. **Retrieve the Top 10 Relevant Chunks and Source Filenames:**
+   - Filter `kira_extracted_documents_ns` to include only records matching the top 3 `file_path` values from Step 1.
+   - Join with `kira_extracted_document` on `file_path` to retrieve the corresponding `kira_extracted_document.file_name`.
+   - Evaluate `kira_extracted_documents_ns.chunk_text` against the user query to select the 10 most relevant chunks, keeping their associated `file_name`.
+
+3. **Generate the Answer with Citations:**
+   - Use only the 10 retrieved chunks from Step 2 to answer the user's query accurately and concisely.
+   - Cite the exact `kira_extracted_document.file_name` inline next to each key fact or claim (e.g., `[file_name.pdf]`).
+   - Include a **Sources** list at the end of the response containing the unique `file_name` values referenced.
+   - If the retrieved chunks do not contain enough information to answer the query, state this clearly rather than guessing.
+
+4. **Cache Query Data:**
+   - Save the query data—including the user query, top 3 `file_path` values, top 10 retrieved chunks, referenced `file_name` values, and timestamp—into `<CACHE_TABLE_NAME>`.
+
+
 qa_agent_project/
 ├── agents/
 │   ├── rag_agent.py      # Agent 1: Governance RAG
