@@ -578,3 +578,10 @@ section = doc.get_section("1.2")  # or doc.get_section("Methodology")
 if section:
     print(section.to_markdown(include_children=True))
     print(section.to_json(include_children=False))
+
+
+qa_agent_project/
+├── agents/
+│   ├── rag_agent.py      # Agent 1: Governance RAG
+│   └── mcp_agent.py      # Agent 2: Mock DB + FastMCP server
+└── orchestrator.ipynb    # Classifier, routing, synthesis & MLflow deployment
